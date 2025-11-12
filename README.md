@@ -12,26 +12,26 @@ Prerequisites:
 Installation:
 Clone the repository
 git clone https://github.com/MaayanGrin/Auction-House.git
+
 cd auction_challenge
 
 Install dependencies:
 
-# Backend 
+# Backend :
 cd server
 npm install
-# Frontend
+
+# Frontend:
 cd client
 npm install
 
 Start the application:
 
-# Terminal 1 - Backend
+# Terminal 1 - Backend:
 cd server
-
-choose one :
 npm start || npm start:dev
 
-# Terminal 2 - Frontend  
+# Terminal 2 - Frontend : 
 cd client
 npm start || ng s
 
