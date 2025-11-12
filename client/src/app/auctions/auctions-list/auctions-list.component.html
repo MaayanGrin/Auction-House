@@ -1,0 +1,194 @@
+<div class="auction-page-container">
+  <div class="auction-sidebar">
+    <div class="user-info" *ngIf="currentUser">
+      <h4><i class="fas fa-user"></i> {{ currentUser.userName }}</h4>
+      <div class="connection-status" [class]="connectionStatus">
+        <ng-container [ngSwitch]="connectionStatus">
+          <span *ngSwitchCase="'connected'" class="status-indicator connected">
+            <i class="fas fa-circle"></i> Live
+          </span>
+          <span *ngSwitchCase="'reconnecting'" class="status-indicator reconnecting">
+            <i class="fas fa-sync fa-spin"></i> Reconnecting...
+          </span>
+          <span *ngSwitchCase="'disconnected'" class="status-indicator disconnected">
+            <i class="fas fa-exclamation-circle"></i> Disconnected
+          </span>
+        </ng-container>
+      </div>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+
+
+    <div class="quick-actions">
+      <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+      <button class="action-btn create-btn" (click)="createNewAuction()">
+        <i class="fas fa-plus"></i> Create Auction
+      </button>
+      <button class="action-btn refresh-btn" (click)="refreshAuctions()" [disabled]="isLoading">
+        <i class="fas fa-sync-alt" [class.fa-spin]="isLoading"></i> Refresh All
+      </button>
+    </div>
+
+
+    <div class="filters-section">
+      <h4><i class="fas fa-filter"></i> Filters</h4>
+      <ul class="tabs">
+        <li 
+          [class.active]="selectedTab === 'Active'" 
+          (click)="selectTab('Active')">
+          <i class="fas fa-fire"></i> Active ({{ activeAuctions.length }})
+        </li>
+        <li 
+          [class.active]="selectedTab === 'Scheduled'" 
+          (click)="selectTab('Scheduled')">
+          <i class="fas fa-calendar-alt"></i> Scheduled ({{ scheduledAuctions.length }})
+        </li>
+        <li 
+          [class.active]="selectedTab === 'Ended'" 
+          (click)="selectTab('Ended')">
+          <i class="fas fa-flag-checkered"></i> Ended ({{ endedAuctions.length }})
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="auction-content">
+    <div class="auction-header">
+      <div class="header-left">
+        <h2><i class="fas fa-gavel"></i>Auctions Dashboard</h2>
+        <div class="live-indicator" *ngIf="socketService.isConnected()">
+          <span class="live-dot"></span>
+          <span class="live-text">LIVE</span>
+        </div>
+      </div>
+    </div>
+
+        <div *ngIf="isLoading" class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading auctions...</p>
+        </div>
+
+        <div *ngIf="selectedTab === 'Active' && !isLoading" class="auction-list">
+            <h3>Active Auctions ({{ currentAuctions.length }})</h3>
+            <div *ngIf="currentAuctions.length === 0" class="no-auctions">
+                <p>No active auctions at the moment.</p>
+            </div>
+            <table *ngIf="currentAuctions.length > 0" class="auction-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Time Remaining</th>
+                        <th>Current Bid</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let auction of currentAuctions" 
+                        class="auction-row"
+                        [class.just-updated]="auction._justUpdated"
+                        [class.new-auction]="auction._isNew">
+                        <td class="title-cell">
+                            <strong>{{ auction.title }}</strong>
+                            <small *ngIf="auction._justUpdated" style="color: #27ae60;">
+                                <i class="fas fa-sync-alt fa-spin"></i> Updated
+                            </small>
+                        </td>
+                        <td class="time-cell">
+                            <span class="time-remaining" [class.urgent]="isUrgent(auction)">
+                                {{ getTimeRemaining(auction) }}
+                            </span>
+                        </td>
+                        <td class="bid-cell">
+                            <span class="current-bid">{{ getCurrentBid(auction) | currency:'USD':'symbol':'1.0-0' }}</span>
+                        </td>
+                        <td class="action-cell">
+                            <button class="view-btn" (click)="viewAuctionDetails(auction.id)" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+                <div *ngIf="selectedTab === 'Scheduled' && !isLoading" class="auction-list">
+            <h3>Scheduled Auctions ({{ scheduledAuctions.length }})</h3>
+            <div *ngIf="scheduledAuctions.length === 0" class="no-auctions">
+                <p>No scheduled auctions at the moment.</p>
+            </div>
+            <table *ngIf="scheduledAuctions.length > 0" class="auction-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Status</th>
+                        <th>Starting Bid</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let auction of scheduledAuctions" 
+                        class="auction-row"
+                        [class.just-updated]="auction._justUpdated"
+                        [class.new-auction]="auction._isNew">
+                        <td class="title-cell">
+                            <strong>{{ auction.title }}</strong>
+                            <small *ngIf="auction._isNew" style="color: #f39c12;">
+                                <i class="fas fa-star"></i> New
+                            </small>
+                        </td>
+                        <td class="time-cell">
+                            <span class="time-remaining">
+                                {{ getTimeRemaining(auction) }}
+                            </span>
+                        </td>
+                        <td class="bid-cell">
+                            <span class="current-bid">{{ getBidDisplayValue(auction) | currency:'USD':'symbol':'1.0-0' }}</span>
+                        </td>
+                        <td class="action-cell">
+                            <button class="view-btn" (click)="viewAuctionDetails(auction.id)" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+                <div *ngIf="selectedTab === 'Ended' && !isLoading" class="auction-list">
+            <h3>Ended Auctions ({{ endedAuctions.length }})</h3>
+            <div *ngIf="endedAuctions.length === 0" class="no-auctions">
+                <p>No ended auctions at the moment.</p>
+            </div>
+            <table *ngIf="endedAuctions.length > 0" class="auction-table">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Time Remaining</th>
+                        <th>Current Bid</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let auction of currentAuctions" class="auction-row">
+                        <td class="title-cell">
+                            <strong>{{ auction.title }}</strong>
+                        </td>
+                        <td class="time-cell">
+                            <span class="time-remaining" [class.urgent]="isUrgent(auction)">
+                                {{ getTimeRemaining(auction) }}
+                            </span>
+                        </td>
+                        <td class="bid-cell">
+                            <span class="current-bid">{{ getCurrentBid(auction) | currency:'USD':'symbol':'1.0-0' }}</span>
+                        </td>
+                        <td class="action-cell">
+                            <button class="view-btn" (click)="viewAuctionDetails(auction.id)" title="View Details">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

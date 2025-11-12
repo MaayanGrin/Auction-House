@@ -1,0 +1,24 @@
+    <div class="notifications-container">
+      <div  *ngFor="let notification of notifications" 
+        class="notification"
+        [ngClass]="'notification-' + notification.type"
+        [@slideIn]>
+        
+        <div class="notification-icon">
+          <i [class]="getIconClass(notification.type)"></i>
+        </div>
+        
+        <div class="notification-content">
+          <div class="notification-title">{{ notification.title }}</div>
+          <div class="notification-message">{{ notification.message }}</div>
+          <div class="notification-time">{{ getTimeAgo(notification.timestamp) }}</div>
+        </div>
+        
+        <button 
+          class="notification-close"
+          (click)="removeNotification(notification.id)"
+          title="Close">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+    </div>

@@ -1,0 +1,238 @@
+<div class="auction-detail-container">
+
+  <div class="auction-sidebar">
+    <div class="user-info" *ngIf="currentUser">
+      <h4><i class="fas fa-user"></i> {{ currentUser.userName }}</h4>
+      <div class="connection-status" [class]="connectionStatus">
+        <ng-container [ngSwitch]="connectionStatus">
+          <span *ngSwitchCase="'connected'" class="status-indicator connected">
+            <i class="fas fa-circle"></i> Live
+          </span>
+          <span *ngSwitchCase="'reconnecting'" class="status-indicator reconnecting">
+            <i class="fas fa-sync fa-spin"></i> Reconnecting...
+          </span>
+          <span *ngSwitchCase="'disconnected'" class="status-indicator disconnected">
+            <i class="fas fa-exclamation-circle"></i> Disconnected
+          </span>
+        </ng-container>
+      </div>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+
+
+    <div class="quick-actions">
+      <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+      <button class="action-btn back-btn" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Back to Auctions
+      </button>
+      <button class="action-btn create-btn" (click)="createAuction()">
+        <i class="fas fa-plus"></i> Create Auction
+      </button>
+    </div>
+
+
+    <div class="auction-stats" *ngIf="auction">
+      <h4><i class="fas fa-chart-bar"></i> Auction Stats</h4>
+      <div class="stat-item">
+        <i class="fas fa-users"></i>
+        <span>{{ participantCount }} participants</span>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-gavel"></i>
+        <span>{{ auction.bids?.length || 0 }} bids placed</span>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="auction-content">
+
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <h3>Loading auction details...</h3>
+    </div>
+
+
+    <div *ngIf="error && !isLoading" class="error-container">
+      <i class="fas fa-exclamation-triangle"></i>
+      <h3>Error Loading Auction</h3>
+      <p>{{ error }}</p>
+      <button class="retry-btn" (click)="loadAuctionDetails()">
+        <i class="fas fa-redo"></i> Try Again
+      </button>
+    </div>
+
+
+    <div *ngIf="auction && !isLoading" class="auction-detail">
+
+      <div class="auction-header">
+        <div class="auction-title">
+          <h1>{{ auction.title }}</h1>
+          <div class="auction-status">
+            <span class="status-badge" [ngClass]="getStatusClass(auction.status)">
+              <i [class]="getStatusIcon(auction.status)"></i>
+              {{ getStatusText(auction.status) }}
+            </span>
+          </div>
+        </div>
+        
+    
+        <div class="time-remaining-card" [class.urgent]="isTimeUrgent()">
+          <div class="time-label">
+            <i class="fas fa-clock"></i>
+            {{ getTimeLabel() }}
+          </div>
+          <div class="time-display">{{ getTimeRemaining() }}</div>
+        </div>
+      </div>
+
+   
+      <div class="content-grid">
+    
+        <div class="auction-info">
+          <div class="info-card">
+            <h3><i class="fas fa-info-circle"></i> Auction Details</h3>
+            <div class="auction-description">
+              <p>{{ auction.description || 'No description provided.' }}</p>
+            </div>
+            
+            <div class="auction-metadata">
+              <div class="metadata-row">
+                <span class="label"><i class="fas fa-tag"></i> Starting Price:</span>
+                <span class="value">{{ auction.startingPrice | currency:auction.currency:'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="metadata-row" *ngIf="auction.reservePrice">
+                <span class="label"><i class="fas fa-shield-alt"></i> Reserve Price:</span>
+                <span class="value">{{ auction.reservePrice | currency:auction.currency:'symbol':'1.0-0' }}</span>
+              </div>
+              <div class="metadata-row">
+                <span class="label"><i class="fas fa-money-bill-wave"></i> Currency:</span>
+                <span class="value">{{ auction.currency }}</span>
+              </div>
+              <div class="metadata-row">
+                <span class="label"><i class="fas fa-calendar-start"></i> Started:</span>
+                <span class="value">{{ auction.startTime | date:'medium' }}</span>
+              </div>
+              <div class="metadata-row">
+                <span class="label"><i class="fas fa-calendar-times"></i> Ends:</span>
+                <span class="value">{{ auction.endTime | date:'medium' }}</span>
+              </div>
+            </div>
+          </div>
+
+    
+          <div class="current-bid-card" [class.new-bid-pulse]="isNewBidHighlighted">
+            <h3><i class="fas fa-trophy"></i> Current Highest Bid</h3>
+            <div class="current-bid-amount">
+              {{ getCurrentBidAmount() | currency:auction.currency:'symbol':'1.0-0' }}
+            </div>
+            <div class="current-bidder" *ngIf="auction.highest?.bidder">
+              by <strong>{{ auction.highest.bidder }}</strong>
+              <span class="bid-time" *ngIf="auction.highest?.time">
+                {{ auction.highest.time | date:'short' }}
+              </span>
+            </div>
+            <div class="current-bidder" *ngIf="!auction.highest?.bidder">
+              No bids yet - starting at {{ auction.startingPrice | currency:auction.currency:'symbol':'1.0-0' }}
+            </div>
+          </div>
+
+    
+          <div class="bidding-card" *ngIf="canPlaceBid()">
+            <h3><i class="fas fa-gavel"></i> Place Your Bid</h3>
+            <form (ngSubmit)="placeBid()" class="bid-form">
+              <div class="bid-input-group">
+                <div class="currency-prefix">{{ auction.currency }}</div>
+                <input type="number" 
+                  [(ngModel)]="bidAmount"
+                  name="bidAmount"
+                  class="bid-input"
+                  [min]="getMinimumBid()"
+                  step="1"
+                  placeholder="Enter your bid"
+                  [disabled]="isPending"
+                  required>
+
+                <button 
+                  type="submit" 
+                  class="bid-button"
+                  [disabled]="!canSubmitBid() || isPending">
+                  <i class="fas fa-spinner fa-spin" *ngIf="isPending"></i>
+                  <i class="fas fa-gavel" *ngIf="!isPending"></i>
+                  {{ isPending ? 'Placing...' : 'Place Bid' }}
+                </button>
+              </div>
+              <div class="bid-help">
+                Minimum bid: {{ getMinimumBid() | currency:auction.currency:'symbol':'1.0-0' }}
+              </div>
+              <div class="bid-error" *ngIf="bidError">
+                <i class="fas fa-exclamation-circle"></i>
+                {{ bidError }}
+              </div>
+            </form>
+          </div>
+
+      
+          <div class="auction-ended-card" *ngIf="auction.status === 'ended'">
+            <h3><i class="fas fa-flag-checkered"></i> Auction Ended</h3>
+            <div class="winner-info" *ngIf="auction.highest">
+              <p><strong>Winner:</strong> {{ auction.highest.bidder }}</p>
+              <p><strong>Winning Bid:</strong> {{ auction.highest.amount | currency:auction.currency:'symbol':'1.0-0' }}</p>
+            </div>
+            <div class="no-winner" *ngIf="!auction.highest">
+              <p>No bids were placed on this auction.</p>
+            </div>
+          </div>
+
+      
+          <div class="auction-scheduled-card" *ngIf="auction.status === 'scheduled'">
+            <h3><i class="fas fa-calendar-alt"></i> Auction Not Started</h3>
+            <p>This auction will begin accepting bids when the start time arrives.</p>
+            <p><strong>Start Time:</strong> {{ auction.startTime | date:'medium' }}</p>
+          </div>
+        </div>
+
+       
+        <div class="bid-history">
+          <div class="history-card" [class.highlighted]="isBidHistoryHighlighted">
+            <h3><i class="fas fa-history"></i> Bid History </h3>
+            
+            <div *ngIf="!auction.bids || auction.bids.length === 0" class="no-bids">
+              <i class="fas fa-gavel"></i>
+              <p>No bids have been placed yet.</p>
+            </div>
+
+            <div *ngIf="auction.bids && auction.bids.length > 0" class="bid-list">
+              <div *ngFor="let bid of getSortedBids(); let i = index" 
+                class="bid-item"
+                [class.highest-bid]="getBidRank(bid) === 1"
+                [class.user-bid]="isUserBid(bid)"
+                [class.recent-bid]="isRecentBid(bid)"
+                [class.new-bid-pulse]="isNewBidHighlighted && getBidRank(bid) === 1">
+                <div class="bid-header">
+                  <span class="bid-rank" *ngIf="getBidRank(bid) === 1">
+                    <i class="fas fa-crown"></i> Highest
+                  </span>
+                  <span class="bid-rank" *ngIf="getBidRank(bid) !== 1">#{{ getBidRank(bid) }}</span>
+                  <span class="bid-amount">{{ bid.amount | currency:auction.currency:'symbol':'1.0-0' }}</span>
+                  <span class="new-badge" *ngIf="isRecentBid(bid)">NEW</span>
+                </div>
+                <div class="bid-details">
+                  <span class="bidder">
+                    <i class="fas fa-user"></i>
+                    {{ bid.bidder }}
+                    <span *ngIf="isUserBid(bid)"class="you-indicator" >(You)</span>
+                  </span>
+                  <span class="bid-time">
+                    <i class="fas fa-clock"></i>
+                    {{ bid.time | date:'short' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

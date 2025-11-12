@@ -1,0 +1,119 @@
+    .login-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .login-card {
+      background: white;
+    border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 40px;
+       max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .login-header {
+      margin-bottom: 30px;
+    }
+
+    .login-header i {
+      font-size: 48px;
+      color: #667eea;
+      margin-bottom: 15px;
+    }
+
+    .login-header h1 {
+      margin: 0 0 10px 0;
+      color: #333;
+      font-size: 28px;
+    }
+
+    .login-header p {
+      margin: 0;
+      color: #666;
+      font-size: 14px;
+    }
+    
+    .form-input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e1e5e9;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-input.error {
+      border-color: #e74c3c;
+    }
+
+    .login-form {
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    .form-group label i {
+      margin-right: 8px;
+      color: #667eea;
+    }
+
+
+
+    .login-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .login-btn i {
+      margin-right: 8px;
+    }
+
+    .login-footer {
+      color: #666;
+      font-size: 12px;
+    }
+
+    .login-footer i {
+      margin-right: 5px;
+      color: #667eea;
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+       border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+        transition: transform 0.2s ease;
+    }
+
+    .login-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+    }
+  

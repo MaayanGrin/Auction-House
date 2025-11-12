@@ -1,0 +1,159 @@
+<div class="auction-page-container">
+  <div class="auction-sidebar">
+    <div class="user-info" *ngIf="currentUser">
+      <h4><i class="fas fa-user"></i> {{ currentUser.userName }}</h4>
+      <div class="connection-status" [class]="connectionStatus">
+        <ng-container [ngSwitch]="connectionStatus">
+          <span *ngSwitchCase="'connected'" class="status-indicator connected">
+            <i class="fas fa-circle"></i> Live
+          </span>
+          <span *ngSwitchCase="'reconnecting'" class="status-indicator reconnecting">
+            <i class="fas fa-sync fa-spin"></i> Reconnecting...
+          </span>
+          <span *ngSwitchCase="'disconnected'" class="status-indicator disconnected">
+            <i class="fas fa-exclamation-circle"></i> Disconnected
+          </span>
+        </ng-container>
+      </div>
+      <button class="logout-btn" (click)="logout()">Logout</button>
+    </div>
+    <div class="quick-actions">
+      <h4><i class="fas fa-bolt"></i> Quick Actions</h4>
+       <button class="action-btn back-btn" (click)="onCancel()" [disabled]="isSubmitting">
+         <i class="fas fa-arrow-left"></i> Back to Auctions
+      </button>
+    </div>
+  </div>
+
+  <div class="auction-content">
+    <div class="auction-header">
+      <h2><i class="fas fa-gavel"></i> Create New Auction</h2>
+    </div>
+
+    <div *ngIf="errorMessage" class="error-alert">
+      <i class="fas fa-exclamation-triangle"></i>
+      {{ errorMessage }}
+    </div>
+
+ <div class="form-container">
+     <form [formGroup]="auctionForm" (ngSubmit)="onSubmit()" class="auction-form">
+      
+      <div class="form-group">
+        <label for="title" class="form-label">Title *</label>
+        <input 
+          type="text" 
+          id="title"
+          formControlName="title"
+          class="form-input"
+          [class.error]="isFieldInvalid('title')"
+          placeholder="Enter title"
+          maxlength="100">
+        <div *ngIf="isFieldInvalid('title')" class="field-error">
+          {{ getFieldError('title') }}
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="description" class="form-label">Description *</label>
+        <textarea id="description"
+          formControlName="description"
+           class="form-textarea"
+          [class.error]="isFieldInvalid('description')"
+          placeholder="Enter description"
+          rows="4"
+          maxlength="500">
+        </textarea>
+        <div *ngIf="isFieldInvalid('description')" class="field-error">
+          {{ getFieldError('description') }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-2">
+          <label for="startingPrice" class="form-label"> Starting Price *</label>
+          <input 
+            type="number" 
+            id="startingPrice"
+            formControlName="startingPrice"
+            class="form-input"
+            [class.error]="isFieldInvalid('startingPrice')"
+            placeholder="0.00"           
+            min="1.00"
+            step="1.00">
+          <div *ngIf="isFieldInvalid('startingPrice')" class="field-error">
+            {{ getFieldError('startingPrice') }}
+          </div>
+        </div>
+
+        <div class="form-group flex-1">
+          <label for="currency" class="form-label">Currency *</label>
+          <select  id="currency"
+            formControlName="currency"
+            class="form-select"
+            [class.error]="isFieldInvalid('currency')">
+            <option *ngFor="let curr of currencies" [value]="curr.code">
+              {{ curr.symbol }} {{ curr.name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="reservePrice" class="form-label">Reserve Price</label>
+        <input  type="number" 
+          id="reservePrice"
+          formControlName="reservePrice"
+          class="form-input"
+          placeholder="Minimum price"
+          min="1.00"
+          step="1.00">
+      </div>
+
+      <div class="form-row">
+        <div class="form-group flex-1">
+          <label for="startTime" class="form-label">Auction Start Time *</label>
+          <input type="datetime-local" 
+            id="startTime"
+            formControlName="startTime"
+            class="form-input"
+            [class.error]="isFieldInvalid('startTime')">
+          <div *ngIf="isFieldInvalid('startTime')" class="field-error">
+            {{ getFieldError('startTime') }}
+          </div>
+        </div>
+
+            <div class="form-group flex-1">
+            <label for="endTime" class="form-label">Auction End Time *</label>
+          <input  type="datetime-local" 
+            id="endTime"
+            formControlName="endTime"
+            class="form-input"
+            [class.error]="isFieldInvalid('endTime')">
+          <div *ngIf="isFieldInvalid('endTime')" class="field-error">
+            {{ getFieldError('endTime') }}
+          </div>
+          <small class="field-hint">
+            Must be at least 30 minutes after start time
+          </small>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button 
+          type="button"  class="btn btn-secondary"
+          (click)="onCancel()"
+          [disabled]="isSubmitting">
+          <i class="fas fa-times"></i> Cancel
+        </button>
+        
+        <button 
+          type="submit"  class="btn btn-primary"
+          [disabled]="auctionForm.invalid || isSubmitting">
+          <i *ngIf="isSubmitting" class="fas fa-spinner fa-spin" ></i>
+          <i *ngIf="!isSubmitting" class="fas fa-plus" ></i>
+          {{ isSubmitting ? 'Creating...' : 'Create Auction' }}
+        </button>
+      </div>
+ </form>
+        </div>
+    </div>
+</div>

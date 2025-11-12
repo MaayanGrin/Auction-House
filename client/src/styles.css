@@ -1,0 +1,7 @@
+body { font-family: Arial, sans-serif; margin: 16px; }
+.auction-card {    
+    border: 1px solid #ccc; 
+    padding: 8px; 
+    margin: 8px 0;
+     cursor: pointer; 
+    }

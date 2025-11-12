@@ -1,0 +1,345 @@
+.auction-page-container {
+  display: flex;
+  min-height: 96vh;
+  background-color: #f5f6fa;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auction-sidebar {
+  width: 280px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-info {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.user-info h4 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.connection-status {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.connection-status .status-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.connection-status .status-indicator i {
+  margin-right: 5px;
+  font-size: 10px;
+}
+
+.status-indicator.connected {
+  color: #2ecc71;
+}
+
+.status-indicator.connected i {
+  animation: pulse 2s infinite;
+}
+
+.status-indicator.disconnected {
+  color: #e74c3c;
+}
+
+.status-indicator.reconnecting {
+  color: #f39c12;
+}
+
+.status-indicator.reconnecting i {
+  animation: spin 1s linear infinite;
+}
+
+.quick-actions {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+
+.quick-actions h4 {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.action-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.back-btn {
+  background: rgba(231, 76, 60, 0.2);
+  color: white;
+}
+
+.back-btn:hover {
+  background: rgba(231, 76, 60, 0.3);
+}
+
+.list-btn {
+  background: rgba(52, 152, 219, 0.2);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  color: white;
+}
+
+.list-btn:hover {
+  background: rgba(52, 152, 219, 0.3);
+}
+
+.logout-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 12px;
+  width: 100%;
+}
+
+.logout-btn:hover {
+  background: #c0392b;
+}
+
+.auction-content {
+  flex: 1;
+  padding: 30px;
+  overflow-x: auto;
+}
+
+.auction-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #e1e8ed;
+}
+
+.auction-header h2 {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.form-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.error-alert {
+  background: #fee;
+  border: 1px solid #fcc;
+  color: #c33;
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.auction-form {
+  padding: 30px;
+}
+
+.form-group {
+  margin-bottom: 25px;
+}
+
+.form-row {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.flex-1 {
+  flex: 1;
+}
+
+.flex-2 {
+  flex: 2;
+}
+
+.form-label {
+  display: block;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.form-label i {
+  margin-right: 8px;
+  color: #667eea;
+  width: 16px;
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #e1e8ed;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-input.error,
+.form-textarea.error,
+.form-select.error {
+  border-color: #e74c3c;
+  box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.field-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.field-hint {
+  color: #7f8c8d;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #e1e8ed;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+.btn-secondary {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #d5dbdb;
+}
+
+@media (max-width: 768px) {
+  .auction-page-container {
+    flex-direction: column;
+  }
+  
+  .auction-sidebar {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .auction-content {
+    padding: 20px 15px;
+  }
+  
+  .auction-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+  }
+  
+  .auction-form {
+    padding: 20px;
+  }
+  
+  .form-row {
+    flex-direction: column;
+    gap: 0;
+  }
+  
+  .form-actions {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

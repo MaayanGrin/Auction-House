@@ -1,0 +1,249 @@
+.notifications-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  pointer-events: none;
+  max-width: 400px;
+}
+
+.notification {
+  display: flex;
+  align-items: flex-start;
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  border-left: 4px solid;
+  pointer-events: all;
+  min-width: 350px;
+  animation: slideInRight 0.4s ease-out;
+  transition: all 0.3s ease;
+}
+
+.notification:hover {
+  transform: translateX(-5px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.18);
+}
+
+.notification-success {
+  border-left-color: #27ae60;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fffe 100%);
+}
+
+.notification-error {
+  border-left-color: #e74c3c;
+  background: linear-gradient(135deg, #ffffff 0%, #fef8f8 100%);
+}
+
+.notification-warning {
+  border-left-color: #f39c12;
+  background: linear-gradient(135deg, #ffffff 0%, #fffcf8 100%);
+}
+
+.notification-info {
+  border-left-color: #3498db;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fcff 100%);
+}
+
+
+.notification-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.notification-success .notification-icon {
+  background: #27ae60;
+  color: white;
+}
+
+.notification-error .notification-icon {
+  background: #e74c3c;
+  color: white;
+}
+
+.notification-warning .notification-icon {
+  background: #f39c12;
+  color: white;
+}
+
+.notification-info .notification-icon {
+  background: #3498db;
+  color: white;
+}
+
+
+.notification-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #2c3e50;
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.notification-message {
+  font-size: 14px;
+  color: #5a6c7d;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  word-wrap: break-word;
+}
+
+.notification-time {
+  font-size: 11px;
+  color: #95a5a6;
+  font-weight: 500;
+}
+
+
+.notification-close {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  color: #7f8c8d;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  margin-left: 8px;
+  transition: all 0.2s ease;
+}
+
+.notification-close:hover {
+  background: rgba(0, 0, 0, 0.2);
+  color: #2c3e50;
+  transform: scale(1.1);
+}
+
+.notification-close:active {
+  transform: scale(0.95);
+}
+
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+.notification.fade-out {
+  animation: fadeOut 0.3s ease-in forwards;
+}
+
+
+@media (max-width: 768px) {
+  .notifications-container {
+    top: 10px;
+    right: 10px;
+    left: 10px;
+    max-width: none;
+  }
+  
+  .notification {
+    min-width: 0;
+    margin-bottom: 8px;
+    padding: 14px;
+  }
+  
+  .notification-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+    margin-right: 10px;
+  }
+  
+  .notification-title {
+    font-size: 14px;
+  }
+  
+  .notification-message {
+    font-size: 13px;
+  }
+}
+
+
+.notification.auction-notification {
+  border-left-width: 6px;
+}
+
+.notification.auction-notification .notification-icon {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+
+.notification-important {
+  animation: slideInRight 0.4s ease-out, pulse 2s ease-in-out 0.5s;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  }
+  50% {
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.25);
+  }
+}
+
+
+@media (prefers-color-scheme: dark) {
+  .notification {
+    background: #2c3e50;
+    color: #ecf0f1;
+  }
+  
+  .notification-title {
+    color: #ecf0f1;
+  }
+  
+  .notification-message {
+    color: #bdc3c7;
+  }
+  
+  .notification-time {
+    color: #95a5a6;
+  }
+  
+  .notification-close {
+    background: rgba(255, 255, 255, 0.1);
+    color: #bdc3c7;
+  }
+  
+  .notification-close:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: #ecf0f1;
+  }
+}

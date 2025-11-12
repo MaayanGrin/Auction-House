@@ -1,0 +1,36 @@
+<div class="login-container">
+      <div class="login-card">
+
+      <div *ngIf="!isUserLoggingIn">
+        <div class="login-header">
+            <i class="fas fa-gavel"></i>
+            <h1>Mini Auction House</h1>
+            <p>Enter your username to start bidding</p>
+       </div>
+          
+       <form (ngSubmit)="login()" class="login-form">
+          <div class="form-group">
+              <label for="username"> <i class="fas fa-user"></i> Username</label>
+              <input 
+                type="text" 
+                id="username"
+                [(ngModel)]="username"
+                name="username"
+                class="form-input"
+                placeholder="Enter your username"
+                required
+                >
+            </div>
+            
+            <button 
+              type="submit" 
+              class="login-btn"
+              [disabled]="!username">
+              <i class="fas fa-sign-in-alt"></i>
+              Enter Auction House
+            </button>
+          </form>
+        </div>
+        
+      </div>
+</div>
