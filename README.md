@@ -23,22 +23,17 @@ npm install
 cd client
 npm install
 
-Environment Setup:
-
-# Copy environment files
-cp server/.env.example server/.env
-cp client/.env.example client/.env
-
-Configure environment variables (see .env samples below).
-
 Start the application:
 
 # Terminal 1 - Backend
 cd server
-npm run dev
+
+choose one :
+npm start || npm start:dev
+
 # Terminal 2 - Frontend  
 cd client
-npm start
+npm start || ng s
 
 Access the application:
 Frontend: http://localhost:4200
